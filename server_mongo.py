@@ -2,17 +2,16 @@ import http.server
 import socketserver
 import json
 import sys
+import os
 from pymongo import MongoClient
 
 # ==============================================================================
 # ⚠️ YOUR MONGODB ATLAS CREDENTIALS HERE
-# Paste your connection string inside the quotes below. Example:
-# "mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/?retryWrites=true&w=majority"
 # ==============================================================================
-MONGO_URI = "mongodb+srv://abhaygangwalglim:Abhay%4012345@foodordering.n6bqwt3.mongodb.net/?appName=foodOrdering" 
+MONGO_URI = os.environ.get("MONGODB_URI", "mongodb+srv://abhaygangwalglim:Abhay%4012345@foodordering.n6bqwt3.mongodb.net/?appName=foodOrdering")
 # ==============================================================================
 
-PORT = 8000
+PORT = int(os.environ.get("PORT", 8000))
 
 print("Initializing MongoDB Atlas connection...")
 
@@ -43,9 +42,19 @@ class APIServerHandler(http.server.SimpleHTTPRequestHandler):
     def _set_headers(self, status=200, content_type="application/json"):
         self.send_response(status)
         self.send_header('Content-type', content_type)
+        
+        # Security overrides enabling GitHub Pages to hit the Cloud Server
+        self.send_header('Access-Control-Allow-Origin', '*') 
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        
         # Avoid caching APIs
         self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
         self.end_headers()
+
+    def do_OPTIONS(self):
+        # Automatically approve pre-flight browser security checks
+        self._set_headers(204)
 
     def do_GET(self):
         if self.path == '/api/orders':

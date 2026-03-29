@@ -1,5 +1,12 @@
 // Admin Dashboard Logic
 
+// =======================================================
+// 🌐 API CONFIGURATION
+// Keep empty ('') for local development.
+// Once your backend is deployed to Render, paste its URL here:
+const API_BASE_URL = '';
+// =======================================================
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
@@ -56,7 +63,7 @@ let currentOrders = [];
 
 async function loadOrders() {
     try {
-        const response = await fetch('/api/orders');
+        const response = await fetch(`${API_BASE_URL}/api/orders`);
         if (response.ok) {
             currentOrders = await response.json();
         } else {
@@ -123,7 +130,7 @@ async function markCompleted(index) {
     showToast('Order marked as completed.', 'success');
     
     // Sync backend
-    fetch(`/api/orders/${orderId}`, {
+    fetch(`${API_BASE_URL}/api/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'Completed' })
@@ -140,7 +147,7 @@ async function deleteOrder(index) {
         showToast('Order deleted.', 'info');
         
         // Sync backend
-        fetch(`/api/orders/${orderId}`, {
+        fetch(`${API_BASE_URL}/api/orders/${orderId}`, {
             method: 'DELETE'
         }).catch(err => console.error('Failed API:', err));
     }
