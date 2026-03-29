@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraveBites Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <h2><i class='bx bxs-dish'></i> Admin Login</h2>
+                <p>Welcome back! Please sign in to manage orders.</p>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="admin-user" required placeholder="admin">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="admin-pass" required placeholder="password">
+                </div>
+                <div id="login-error" class="error-msg"></div>
+                <button type="submit" class="btn btn-primary login-btn">Sign In</button>
+            </form>
+            <a href="index.html" class="back-link"><i class='bx bx-arrow-back'></i> Back to App</a>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="dashboard-screen" class="dashboard-layout" style="display: none;">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header" style="cursor: pointer;" title="Back to Homepage" onclick="window.location.href='index.html'">
+                <h2>CraveBites<br>Admin</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" class="active"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="index.html"><i class='bx bx-store'></i> View Store</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="log-out"><i class='bx bx-log-out'></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Live Orders Dashboard</h1>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <select id="time-filter" class="filter-select" onchange="updateAnalytics()">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="weekly">This Week</option>
+                        <option value="monthly">This Month</option>
+                        <option value="yearly">This Year</option>
+                    </select>
+                    <div class="admin-profile">
+                        <img src="https://ui-avatars.com/api/?name=Admin&background=2d3436&color=fff" alt="Admin">
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Analytics Cards -->
+            <section class="analytics-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class='bx bx-receipt'></i></div>
+                    <div class="stat-info">
+                        <h3>Total Orders</h3>
+                        <p id="stat-orders">0</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #388e3c;"><i class='bx bx-dollar'></i></div>
+                    <div class="stat-info">
+                        <h3>Total Revenue</h3>
+                        <p id="stat-revenue">$0.00</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0; color: #f57c00;"><i class='bx bx-star'></i></div>
+                    <div class="stat-info">
+                        <h3>Top Item</h3>
+                        <p id="stat-top-item">-</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Orders Table Section -->
+            <section class="orders-section">
+                <div class="section-header-flex">
+                    <h2>Recent Orders</h2>
+                    <button class="btn btn-secondary" onclick="loadOrders()"><i class='bx bx-refresh'></i> Refresh</button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date/Time</th>
+                                <th>Items Ordered</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <!-- Injected by admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

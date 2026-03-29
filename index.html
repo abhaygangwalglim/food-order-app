@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CraveBites - Food Ordering</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Boxicons for elegant icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="logo" style="cursor: pointer;" onclick="toggleView('menu')">
+            <i class='bx bxs-dish'></i> CraveBites
+        </div>
+        <nav>
+            <button id="nav-menu" class="nav-btn active">Menu</button>
+            <button id="nav-cart" class="nav-btn">
+                <i class='bx bx-cart'></i> Cart 
+                <span id="cart-badge" class="badge">0</span>
+            </button>
+            <button id="nav-orders" class="nav-btn">
+                <i class='bx bx-history'></i> Orders
+            </button>
+            <a href="admin.html" class="nav-btn" style="text-decoration: none;">
+                <i class='bx bx-shield-quarter'></i> Admin
+            </a>
+        </nav>
+    </header>
+
+    <!-- Main Application Container -->
+    <main class="app-container">
+        
+        <!-- Menu Section -->
+        <section id="menu-section" class="page-section active">
+            <div class="section-header">
+                <h1>Our Menu</h1>
+                <p>Discover our delicious offerings and treat yourself today.</p>
+                <div class="view-toggle">
+                    <button id="btn-grid" class="view-btn active" onclick="setMenuView('grid')"><i class='bx bx-grid-alt'></i> Grid</button>
+                    <button id="btn-list" class="view-btn" onclick="setMenuView('list')"><i class='bx bx-list-ul'></i> List</button>
+                </div>
+            </div>
+            
+            <div class="menu-grid" id="menu-grid">
+                <!-- Food items will be dynamically injected here by script.js -->
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section id="cart-section" class="page-section">
+            <div class="section-header">
+                <h1>Your Cart</h1>
+                <p>Review your selected items before placing the order.</p>
+            </div>
+
+            <div class="cart-container">
+                <div class="cart-items" id="cart-items">
+                    <!-- Cart items will be dynamically injected here by script.js -->
+                    <div class="empty-cart-message" id="empty-cart">
+                        <i class='bx bx-shopping-bag' ></i>
+                        <p>Your cart is empty.</p>
+                        <button class="btn btn-primary" onclick="toggleView('menu')">Browse Menu</button>
+                    </div>
+                </div>
+                
+                <div class="cart-summary" id="cart-summary" style="display: none;">
+                    <h2>Order Summary</h2>
+                    <div class="summary-row">
+                        <span>Items Count:</span>
+                        <span id="summary-count">0</span>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Total Price:</span>
+                        <span id="summary-total">$0.00</span>
+                    </div>
+                    <button class="btn btn-primary btn-checkout" id="checkout-btn" onclick="placeOrder()">Place Order</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Orders Section -->
+        <section id="orders-section" class="page-section">
+            <div class="section-header">
+                <h1>Order History</h1>
+                <p>Review your past orders here.</p>
+            </div>
+            
+            <div class="orders-container" id="orders-container">
+                <!-- Order history dynamically injected here -->
+            </div>
+        </section>
+        
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
