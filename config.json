@@ -1,0 +1,6 @@
+{
+    "WEBSITE_NAME": "Gangwal's Kitchen",
+    "MONGODB_URI": "mongodb+srv://abhaygangwalglim:Abhay%4012345@foodordering.n6bqwt3.mongodb.net/?appName=foodOrdering",
+    "ADMIN_USERNAME": "admin",
+    "ADMIN_PASSWORD": "abhay"
+}

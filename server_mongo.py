@@ -6,9 +6,23 @@ import os
 from pymongo import MongoClient
 
 # ==============================================================================
-# ⚠️ YOUR MONGODB ATLAS CREDENTIALS HERE
+# ⚙️ MASTER CONFIGURATION ENGINE
 # ==============================================================================
-MONGO_URI = os.environ.get("MONGODB_URI", "mongodb+srv://abhaygangwalglim:Abhay%4012345@foodordering.n6bqwt3.mongodb.net/?appName=foodOrdering")
+if os.path.exists("config.json"):
+    with open("config.json", "r") as f:
+        config = json.load(f)
+else:
+    print("❌ ERROR: config.json missing! Creating default...")
+    config = {
+        "WEBSITE_NAME": "CraveBites",
+        "MONGODB_URI": "",
+        "ADMIN_USERNAME": "admin",
+        "ADMIN_PASSWORD": "password"
+    }
+    with open("config.json", "w") as f:
+        json.dump(config, f, indent=4)
+
+MONGO_URI = os.environ.get("MONGODB_URI", config.get("MONGODB_URI", ""))
 # ==============================================================================
 
 PORT = int(os.environ.get("PORT", 8000))
@@ -57,7 +71,15 @@ class APIServerHandler(http.server.SimpleHTTPRequestHandler):
         self._set_headers(204)
 
     def do_GET(self):
-        if self.path == '/api/orders':
+        if self.path == '/api/config':
+            self._set_headers()
+            # SECURITY FILTER: Explicitly serve ONLY public frontend variables
+            safe_config = {
+                "WEBSITE_NAME": config.get("WEBSITE_NAME", "CraveBites")
+            }
+            self.wfile.write(json.dumps(safe_config).encode('utf-8'))
+        
+        elif self.path == '/api/orders':
             self._set_headers()
             
             # Query the entire Orders collection.
@@ -75,7 +97,27 @@ class APIServerHandler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
     def do_POST(self):
-        if self.path == '/api/orders':
+        if self.path == '/api/login':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            try:
+                credentials = json.loads(post_data.decode('utf-8'))
+                
+                # Check strictly against our master configuration securely hidden from the Frontend!
+                valid_user = config.get("ADMIN_USERNAME", "admin")
+                valid_pass = config.get("ADMIN_PASSWORD", "password")
+                
+                if credentials.get("username") == valid_user and credentials.get("password") == valid_pass:
+                    self._set_headers(200)
+                    self.wfile.write(json.dumps({"success": True}).encode('utf-8'))
+                else:
+                    self._set_headers(401)
+                    self.wfile.write(json.dumps({"success": False, "error": "Invalid credentials"}).encode('utf-8'))
+            except Exception as e:
+                self._set_headers(400)
+                self.wfile.write(json.dumps({"error": str(e)}).encode('utf-8'))
+                
+        elif self.path == '/api/orders':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
             try:

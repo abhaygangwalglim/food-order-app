@@ -2,11 +2,27 @@
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
+    fetchConfig();
     checkAuth();
 
     document.getElementById('login-form').addEventListener('submit', handleLogin);
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
 });
+
+async function fetchConfig() {
+    try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+            const config = await response.json();
+            if (config.WEBSITE_NAME) {
+                document.getElementById('page-title').textContent = config.WEBSITE_NAME + " Admin Dashboard";
+                document.getElementById('logo-text').textContent = config.WEBSITE_NAME;
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch configuration:", error);
+    }
+}
 
 // Authentication System
 function checkAuth() {
@@ -18,18 +34,43 @@ function checkAuth() {
     }
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
     const user = document.getElementById('admin-user').value;
     const pass = document.getElementById('admin-pass').value;
     const errorMsg = document.getElementById('login-error');
+    
+    // Submit button UX feedback
+    const btn = e.target.querySelector('.btn-primary');
+    if(btn) {
+        btn.innerHTML = "<i class='bx bx-loader bx-spin'></i> Authenticating...";
+        btn.disabled = true;
+    }
 
-    if (user === 'admin' && pass === 'password') {
-        localStorage.setItem('isAdminLoggedIn', 'true');
-        showDashboard();
-        errorMsg.innerText = '';
-    } else {
-        errorMsg.innerText = 'Invalid username or password';
+    try {
+        const response = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass })
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            localStorage.setItem('isAdminLoggedIn', 'true');
+            showDashboard();
+            errorMsg.innerText = '';
+        } else {
+            errorMsg.innerText = 'Access Denied: Invalid credentials.';
+        }
+    } catch (err) {
+        errorMsg.innerText = 'Authentication server offline.';
+        console.error("Login Error:", err);
+    } finally {
+        if(btn) {
+            btn.innerHTML = 'Login as Admin';
+            btn.disabled = false;
+        }
     }
 }
 

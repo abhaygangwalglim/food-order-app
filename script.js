@@ -45,6 +45,7 @@ let orderHistory = []; // Array of order objects
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
+    fetchConfig();
     // Load past orders
     const storedOrders = localStorage.getItem('foodAppOrders');
     if (storedOrders) {
@@ -343,4 +344,20 @@ function showToast(message, type = 'info') {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
+}
+
+// Global Configuration Fetcher
+async function fetchConfig() {
+    try {
+        const response = await fetch('/api/config');
+        if (response.ok) {
+            const config = await response.json();
+            if (config.WEBSITE_NAME) {
+                document.getElementById('page-title').textContent = config.WEBSITE_NAME + " - Food Ordering";
+                document.getElementById('logo-text').textContent = config.WEBSITE_NAME;
+            }
+        }
+    } catch (error) {
+        console.error("Failed to fetch configuration:", error);
+    }
 }
