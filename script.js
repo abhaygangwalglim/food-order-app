@@ -39,14 +39,6 @@ const menuItems = [
     }
 ];
 
-// =======================================================
-// 🌐 API CONFIGURATION
-// Keep empty ('') for local development.
-// Once your backend is deployed to Render, paste its URL here:
-// Example: const API_BASE_URL = 'https://cravebites-backend.onrender.com';
-const API_BASE_URL = '';
-// =======================================================
-
 // App State
 let cart = []; // Array of { id, quantity }
 let orderHistory = []; // Array of order objects
@@ -276,7 +268,7 @@ function placeOrder() {
     localStorage.setItem('foodAppOrders', JSON.stringify(orderHistory));
 
     // Sync globally for admin dashboard
-    fetch(`${API_BASE_URL}/api/orders`, {
+    fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newOrder)
