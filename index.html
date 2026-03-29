@@ -76,6 +76,14 @@
                         <span>Total Price:</span>
                         <span id="summary-total">$0.00</span>
                     </div>
+
+                    <div style="margin: 1.5rem 0;">
+                        <label for="table-select" style="display:block; font-size: 0.9rem; font-weight: 600; color: var(--text-color); margin-bottom: 0.5rem;"><i class='bx bx-restaurant'></i> Select Your Table:</label>
+                        <select id="table-select" style="width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #ddd; outline: none; font-size: 1rem; cursor: pointer;">
+                            <option value="">-- Choose Here --</option>
+                        </select>
+                    </div>
+
                     <button class="btn btn-primary btn-checkout" id="checkout-btn" onclick="placeOrder()">Place Order</button>
                 </div>
             </div>

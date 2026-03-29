@@ -246,6 +246,13 @@ function renderCart() {
 function placeOrder() {
     if (cart.length === 0) return;
     
+    const tableSelect = document.getElementById('table-select');
+    if (!tableSelect.value) {
+        showToast('Please select your table number!', 'error');
+        tableSelect.focus();
+        return;
+    }
+    
     // Calculate total for history
     let orderTotal = 0;
     const itemsSnapshot = cart.map(c => {
@@ -258,6 +265,7 @@ function placeOrder() {
     // Create Order Object
     const newOrder = {
         id: 'ORD' + Math.floor(Math.random() * 100000),
+        table: tableSelect.value,
         date: new Date().toLocaleString(),
         items: itemsSnapshot,
         total: orderTotal,
@@ -280,6 +288,7 @@ function placeOrder() {
     // Reset cart
     setTimeout(() => {
         cart = [];
+        tableSelect.value = '';
         updateCartUI();
         toggleView('orders'); // Send to orders history instead of menu
     }, 1500);
@@ -317,9 +326,10 @@ function renderOrders() {
                     <div class="order-id">Order #${order.id}</div>
                     <div class="order-date">${order.date}</div>
                 </div>
-                <div>
+                <div style="text-align: right;">
                     <div class="order-total">$${order.total.toFixed(2)}</div>
                     <div style="font-size: 0.85rem; font-weight: 600; color: ${order.status === 'Completed' ? '#2ecc71' : '#f39c12'}">${order.status || 'Pending'}</div>
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-top: 4px;">Table ${order.table || '?'}</div>
                 </div>
             </div>
             ${itemsHTML}
@@ -355,6 +365,17 @@ async function fetchConfig() {
             if (config.WEBSITE_NAME) {
                 document.getElementById('page-title').textContent = config.WEBSITE_NAME + " - Food Ordering";
                 document.getElementById('logo-text').textContent = config.WEBSITE_NAME;
+            }
+            if (config.TOTAL_TABLES) {
+                const select = document.getElementById('table-select');
+                if (select) {
+                    for (let i = 1; i <= config.TOTAL_TABLES; i++) {
+                        const opt = document.createElement('option');
+                        opt.value = i;
+                        opt.innerText = `Table ${i}`;
+                        select.appendChild(opt);
+                    }
+                }
             }
         }
     } catch (error) {

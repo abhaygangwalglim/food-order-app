@@ -119,7 +119,7 @@ function renderDashboardTable() {
     tbody.innerHTML = '';
 
     if (currentOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">No incoming orders found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">No incoming orders found.</td></tr>`;
         return;
     }
 
@@ -137,6 +137,7 @@ function renderDashboardTable() {
 
         tr.innerHTML = `
             <td style="font-weight: 600;">${order.id}</td>
+            <td style="font-weight: 700; color: #3498db;">${order.table || 'N/A'}</td>
             <td style="color: var(--text-muted); font-size: 0.9rem;">${order.date}</td>
             <td>${itemsList}</td>
             <td style="font-weight: 700; color: var(--primary);">$${order.total.toFixed(2)}</td>

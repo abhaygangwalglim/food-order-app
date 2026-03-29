@@ -17,7 +17,8 @@ else:
         "WEBSITE_NAME": "CraveBites",
         "MONGODB_URI": "",
         "ADMIN_USERNAME": "admin",
-        "ADMIN_PASSWORD": "password"
+        "ADMIN_PASSWORD": "password",
+        "TOTAL_TABLES": 20
     }
     with open("config.json", "w") as f:
         json.dump(config, f, indent=4)
@@ -75,7 +76,8 @@ class APIServerHandler(http.server.SimpleHTTPRequestHandler):
             self._set_headers()
             # SECURITY FILTER: Explicitly serve ONLY public frontend variables
             safe_config = {
-                "WEBSITE_NAME": config.get("WEBSITE_NAME", "CraveBites")
+                "WEBSITE_NAME": config.get("WEBSITE_NAME", "CraveBites"),
+                "TOTAL_TABLES": config.get("TOTAL_TABLES", 20)
             }
             self.wfile.write(json.dumps(safe_config).encode('utf-8'))
         
