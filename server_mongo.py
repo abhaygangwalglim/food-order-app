@@ -18,7 +18,8 @@ else:
         "MONGODB_URI": "",
         "ADMIN_USERNAME": "admin",
         "ADMIN_PASSWORD": "password",
-        "TOTAL_TABLES": 20
+        "TOTAL_TABLES": 20,
+        "BASE_URL": "http://localhost:8000"
     }
     with open("config.json", "w") as f:
         json.dump(config, f, indent=4)
@@ -77,7 +78,8 @@ class APIServerHandler(http.server.SimpleHTTPRequestHandler):
             # SECURITY FILTER: Explicitly serve ONLY public frontend variables
             safe_config = {
                 "WEBSITE_NAME": config.get("WEBSITE_NAME", "CraveBites"),
-                "TOTAL_TABLES": config.get("TOTAL_TABLES", 20)
+                "TOTAL_TABLES": config.get("TOTAL_TABLES", 20),
+                "BASE_URL": config.get("BASE_URL", "http://localhost:8000")
             }
             self.wfile.write(json.dumps(safe_config).encode('utf-8'))
         

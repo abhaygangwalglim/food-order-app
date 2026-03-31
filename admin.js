@@ -9,15 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
 });
 
+let globalConfig = null;
+
 async function fetchConfig() {
     try {
         const response = await fetch('/api/config');
         if (response.ok) {
-            const config = await response.json();
-            if (config.WEBSITE_NAME) {
-                document.getElementById('page-title').textContent = config.WEBSITE_NAME + " Admin Dashboard";
-                document.getElementById('logo-text').textContent = config.WEBSITE_NAME;
+            globalConfig = await response.json();
+            if (globalConfig.WEBSITE_NAME) {
+                document.getElementById('page-title').textContent = globalConfig.WEBSITE_NAME + " Admin Dashboard";
+                document.getElementById('logo-text').textContent = globalConfig.WEBSITE_NAME;
             }
+            generateQRCodes();
         }
     } catch (error) {
         console.error("Failed to fetch configuration:", error);
@@ -90,6 +93,38 @@ function showDashboard() {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard-screen').style.display = 'flex';
     loadOrders();
+}
+
+// Navigation Router
+function switchAdminView(view) {
+    document.getElementById('dashboard-view').style.display = view === 'dashboard' ? 'block' : 'none';
+    document.getElementById('qr-view').style.display = view === 'qr' ? 'block' : 'none';
+    
+    document.getElementById('nav-dashboard').className = view === 'dashboard' ? 'active' : '';
+    document.getElementById('nav-qr').className = view === 'qr' ? 'active' : '';
+}
+
+// QR Code Automation
+function generateQRCodes() {
+    if (!globalConfig || !globalConfig.TOTAL_TABLES || !globalConfig.BASE_URL) return;
+    
+    const qrGrid = document.getElementById('qr-grid');
+    if (!qrGrid) return;
+    qrGrid.innerHTML = '';
+    
+    for (let i = 1; i <= globalConfig.TOTAL_TABLES; i++) {
+        const url = `${globalConfig.BASE_URL}/?table=${i}`;
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(url)}`;
+        
+        const card = document.createElement('div');
+        card.style = "background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; border: 2px solid #f1f2f6;";
+        card.innerHTML = `
+            <img src="${qrUrl}" alt="Table ${i} QR" style="width: 150px; height: 150px; margin-bottom: 15px;">
+            <h3 style="margin: 0; color: var(--text-color); font-size: 1.4rem;">Table ${i}</h3>
+            <p style="margin: 5px 0 0 0; font-size: 0.8rem; color: var(--text-muted); word-break: break-all;">${url}</p>
+        `;
+        qrGrid.appendChild(card);
+    }
 }
 
 // Order Management System

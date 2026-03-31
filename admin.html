@@ -41,7 +41,8 @@
                 <h2><span id="logo-text">CraveBites</span><br>Admin</h2>
             </div>
             <ul class="nav-links">
-                <li><a href="#" class="active"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="#" class="active" id="nav-dashboard" onclick="switchAdminView('dashboard')"><i class='bx bxs-dashboard'></i> Dashboard</a></li>
+                <li><a href="#" id="nav-qr" onclick="switchAdminView('qr')"><i class='bx bx-qr'></i> QR Codes</a></li>
                 <li><a href="index.html"><i class='bx bx-store'></i> View Store</a></li>
             </ul>
             <div class="sidebar-footer">
@@ -68,8 +69,9 @@
                 </div>
             </header>
 
-            <!-- Analytics Cards -->
-            <section class="analytics-grid">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" style="display: block;">
+                <section class="analytics-grid">
                 <div class="stat-card">
                     <div class="stat-icon" style="background: #e3f2fd; color: #1976d2;"><i class='bx bx-receipt'></i></div>
                     <div class="stat-info">
@@ -119,6 +121,18 @@
                     </table>
                 </div>
             </section>
+            </div>
+
+            <!-- QR Codes View -->
+            <div id="qr-view" style="display: none; padding: 20px;">
+                <div class="section-header-flex" style="margin-bottom: 2rem;">
+                    <h2>Scannable Table QR Codes</h2>
+                    <button class="btn btn-primary" onclick="window.print()"><i class='bx bx-printer'></i> Print Codes</button>
+                </div>
+                <div id="qr-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 2rem; justify-items: center;">
+                    <!-- Injected by admin.js -->
+                </div>
+            </div>
 
         </main>
     </div>

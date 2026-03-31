@@ -375,6 +375,25 @@ async function fetchConfig() {
                         opt.innerText = `Table ${i}`;
                         select.appendChild(opt);
                     }
+                    
+                    // Hardware Auto-Lock via QR Scanned URL Parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const tableParam = urlParams.get('table');
+                    
+                    if (tableParam && !isNaN(tableParam) && tableParam >= 1 && tableParam <= config.TOTAL_TABLES) {
+                        select.value = tableParam;
+                        select.disabled = true; // Hard Lock!
+                        select.style.backgroundColor = '#f1f2f6';
+                        select.style.color = '#2ecc71';
+                        select.style.fontWeight = 'bold';
+                        
+                        // Rewrite the descriptor label as a Security Confirmation
+                        const label = document.querySelector('label[for="table-select"]');
+                        if (label) {
+                            label.innerHTML = `<i class='bx bxs-lock-alt' style="color:#2ecc71;"></i> Automatically Locked via Scan`;
+                        }
+                        showToast(`Successfully connected to Table ${tableParam}`, 'success');
+                    }
                 }
             }
         }
